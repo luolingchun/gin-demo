@@ -1,0 +1,1 @@
+swag init --dir=src --output=src/docs
