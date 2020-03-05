@@ -6,7 +6,6 @@
 package models
 
 import (
-	orm "gin-demo/src/db"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -21,18 +20,18 @@ type Job struct {
 }
 
 func (j *Job) GetJobs() (jobs []Job, err error) {
-	result := orm.DB.Find(&jobs)
+	result := DB.Find(&jobs)
 	err = result.Error
 	return
 }
 
 func (j *Job) GetJob() error {
-	result := orm.DB.Where("id = ?", j.ID).First(&j)
+	result := DB.Where("id = ?", j.ID).First(&j)
 	return result.Error
 }
 
 func (j *Job) CreateJob() error {
-	result := orm.DB.Create(&j)
+	result := DB.Create(&j)
 	return result.Error
 }
 
@@ -41,7 +40,7 @@ func (j *Job) UpdateJob() error {
 		return gorm.ErrRecordNotFound
 	}
 
-	result := orm.DB.Model(&j).Updates(&j)
+	result := DB.Model(&j).Updates(&j)
 	return result.Error
 }
 
@@ -50,13 +49,13 @@ func (j *Job) DeleteJob() error {
 		return gorm.ErrRecordNotFound
 	}
 
-	result := orm.DB.Delete(&j)
+	result := DB.Delete(&j)
 	return result.Error
 }
 
 func ExistRecordById(id uint64) bool {
 	var job Job
-	if result := orm.DB.Where("id = ?", id).First(&job); result.RecordNotFound() {
+	if result := DB.Where("id = ?", id).First(&job); result.RecordNotFound() {
 		return false
 	}
 	return true

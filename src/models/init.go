@@ -7,17 +7,29 @@ package models
 
 import (
 	"fmt"
-	orm "gin-demo/src/db"
+	"gin-demo/src/config"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-//初始化数据库
+var DB *gorm.DB
+
+//连接数据库
 func init() {
-	fmt.Println("初始化数据库...")
-	if ok := orm.DB.HasTable(&Job{}); ok {
-		fmt.Println("数据库表已存在：job")
-		return
-	} else {
-		orm.DB.CreateTable(&Job{})
+	var err error
+	//dbSource mysql "root:123@tcp(127.0.0.1:3306)/dbname?charset=utf8&parseTime=True&loc=Local"
+	//dbSource postgres "host=host port=port user=gorm password=password dbname=dbname"
+	dbSource := config.DBName + ".db"
+	DB, err = gorm.Open(config.DBDialect, dbSource)
+
+	if err != nil {
+		fmt.Printf("database connect error %v", err)
 	}
 
+	if DB.Error != nil {
+		fmt.Printf("database error %v", DB.Error)
+	}
+
+	//	自动迁移
+	DB.AutoMigrate(&Job{})
 }
