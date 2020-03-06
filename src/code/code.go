@@ -3,7 +3,7 @@
 @Time    : 2020/3/1 13:58
 */
 
-package status_code
+package code
 
 const (
 	Success        = 0   //成功
