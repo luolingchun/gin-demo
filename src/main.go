@@ -14,6 +14,7 @@ import (
 	swagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"io"
+	"net/http"
 	"os"
 )
 
@@ -36,6 +37,10 @@ func main() {
 	r.Use(cors.Default())
 	//swagger文档
 	r.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
+	//跟路由重定向到swagger文档
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
 	//启动服务
 	_ = r.Run(":8080")
 }
